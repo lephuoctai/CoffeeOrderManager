@@ -3,6 +3,8 @@ package src.controller;
 import src.entity.*;
 import src.entity.type.Currency;
 import src.ui.CoffeCLI;
+import src.ui.TUI;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -48,22 +50,83 @@ public class Bank {
         return lastUpdated;
     }
 
-    public static String generateBill(CustomDrink drink) {
-        StringBuilder sb = new StringBuilder();
+    public static String generateBill(
+            CustomDrink drink
+    ) {
 
-        CoffeCLI.addTitle(sb, drink.getName());
-        CoffeCLI.addList(sb, List.of(drink.getBaseDrink()), new String[]{"SL", "Món nền", "Giá"});
-        CoffeCLI.addList(sb, List.of(drink.getSize()), new String[]{"SL", "Kích thước", "Giá"});
-        CoffeCLI.addList(sb, List.of(drink.getMilkType()), new String[]{"SL", "Loại sữa", "Giá"});
-        CoffeCLI.addList(sb,"Topping", (drink.getToppings() == null)? List.of() :drink.getToppings(), new String[]{"Số", "Tên", "Giá"});
+        StringBuilder sb =
+                new StringBuilder();
 
-        //TODO: Add discount if any
-        CoffeCLI.addLines(sb, new String[]{
-                "Tổng tiền: " + Currency.VND.getFormat(drink.getPrice()),
+        TUI.title(
+                sb,
+                drink.getName()
+        );
+
+        TUI.table(
+                sb,
+                "Món nền",
+                List.of(
+                        drink.getBaseDrink()
+                ),
+                new String[]{
+                        "SL",
+                        "Món nền",
+                        "Giá"
+                }
+        );
+
+        TUI.table(
+                sb,
+                "Kích thước",
+                List.of(
+                        drink.getSize()
+                ),
+                new String[]{
+                        "SL",
+                        "Kích thước",
+                        "Giá"
+                }
+        );
+
+        TUI.table(
+                sb,
+                "Loại sữa",
+                List.of(
+                        drink.getMilkType()
+                ),
+                new String[]{
+                        "SL",
+                        "Loại sữa",
+                        "Giá"
+                }
+        );
+
+        TUI.table(
+                sb,
+                "Topping",
+                drink.getToppings() == null
+                        ? List.of()
+                        : drink.getToppings(),
+                new String[]{
+                        "Số",
+                        "Tên",
+                        "Giá"
+                }
+        );
+
+        TUI.message(
+                sb,
+                "Tổng tiền: "
+                        + Currency.VND.getFormat(
+                        drink.getPrice()
+                ),
                 "Giảm giá: Không",
-                "Thành tiền: " + Currency.VND.getFormat(drink.getPrice())
+                "Thành tiền: "
+                        + Currency.VND.getFormat(
+                        drink.getPrice()
+                )
+        );
 
-        });
         return sb.toString();
     }
 }
